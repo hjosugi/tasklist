@@ -14,33 +14,35 @@ import java.util.stream.Collectors;
 @RestController
 public class HomeRestController {
 
-    record TaskItem(String id, String task, String deadline, boolean done) {}
-    private List<TaskItem> taskItems = new ArrayList<>();
+  record TaskItem(String id, String task, String due_date, boolean done) {
+  }
 
-    @RequestMapping(value = "/resthello")
-    String hello() {
-        return """
-                Hello.
-                It works!
-                現在時刻は%sです。
-                """.formatted(LocalDateTime.now());
-    }
+  private List<TaskItem> taskItems = new ArrayList<>();
 
-    @GetMapping("/restadd")
-    String addItem(@RequestParam("task") String task,
-                   @RequestParam("deadline") String deadline) {
-        String id = UUID.randomUUID().toString().substring(0, 8);
-        TaskItem item = new TaskItem(id, task, deadline, false);
-        taskItems.add(item);
+  @RequestMapping(value = "/resthello")
+  String hello() {
+    return """
+        Hello.
+        It works!
+        現在時刻は%sです。
+        """.formatted(LocalDateTime.now());
+  }
 
-        return "タスクを追加しました";
-    }
+  @GetMapping("/restadd")
+  String addItem(@RequestParam("task") String task,
+      @RequestParam("due_date") String due_date) {
+    String id = UUID.randomUUID().toString().substring(0, 8);
+    TaskItem item = new TaskItem(id, task, due_date, false);
+    taskItems.add(item);
 
-    @GetMapping("/restlist")
-    String listItems() {
-        String result = taskItems.stream()
-                .map(TaskItem::toString)
-                .collect(Collectors.joining(", "));
-        return result;
-    }
+    return "タスクを追加しました";
+  }
+
+  @GetMapping("/restlist")
+  String listItems() {
+    String result = taskItems.stream()
+        .map(TaskItem::toString)
+        .collect(Collectors.joining(", "));
+    return result;
+  }
 }
